@@ -19,7 +19,7 @@
         <p>Demo Site.</p>
     </main>
     <footer>
-        &copy; <?php echo date("Y"); ?> Demoapplication
+        &copy; <?php echo date("Y" ?> Demoapplication
     </footer>
 </body>
 </html>
