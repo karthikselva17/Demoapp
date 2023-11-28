@@ -1,31 +1,17 @@
 pipeline {
-    agent any
+        agent {
+                 label 'node1' // Or 'any', 'none', 'docker', etc.
+               }
+    
     stages {
-        stage('SCM') {
-            steps {
+            stage('Deploy to ECS') {
+                steps {
                 // Get some code from a GitHub repository
-                git url: 'https://github.com/karthikselva17/Demophp.git', branch: 'main'
+                sh "terraform init"
+                sh "terraform validate"
+                sh "terraform plan"
+                sh "terraform apply --auto-approve"
                 }          
         }
-        stage('SonarQube Code Scan') {
-        environment {
-            scannerHome = tool 'sonar-scanner'
-          }
-            steps {
-            withSonarQubeEnv('sonarserver') {
-            sh "${scannerHome}/bin/sonar-scanner"
-            }
-        }  
-      }
-       
-      stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-                    // true = set pipeline to UNSTABLE, false = don't
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }  
-   }
+    }
 }
